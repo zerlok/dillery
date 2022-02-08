@@ -1,0 +1,14 @@
+rabbitmq:
+  url: amqp://{user}:{password}@{host}:{port}{virtualhost}
+  protocol: amqp
+  variables:
+    user:
+      default: guest
+    password:
+      default: guest
+    host:
+      default: localhost
+    port:
+      default: '5672'
+    virtualhost:
+      default: /

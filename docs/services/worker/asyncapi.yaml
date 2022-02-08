@@ -1,0 +1,53 @@
+asyncapi: 2.2.0
+info:
+  title: Dillery Worker Service
+  version: 0.1.0
+  description: Performs task execution
+servers:
+  rabbitmq:
+    $ref: '../servers.yaml/rabbitmq'
+channels:
+  task.accepted:
+    servers:
+      - rabbitmq
+    publish:
+      message:
+        $ref: '../messages.yaml/acceptedTask'
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: dillery
+  task.started:
+    servers:
+      - rabbitmq
+    subscribe:
+      message:
+        $ref: '../messages.yaml/startedTask'
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: dillery
+  task.finished:
+    servers:
+      - rabbitmq
+    subscribe:
+      message:
+        $ref: '../messages.yaml/finishedTask'
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: dillery
+  task.failed:
+    servers:
+      - rabbitmq
+    subscribe:
+      message:
+        $ref: '../messages.yaml/failedTask'
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: dillery

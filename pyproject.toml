@@ -10,6 +10,7 @@ license = "MIT"
 python = "^3.8"
 
 [tool.poetry.dev-dependencies]
+asynchron = {git = "https://github.com/zerlok/asynchron.git", rev = "fix/complex-json-references", extras = ["codegen"]}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

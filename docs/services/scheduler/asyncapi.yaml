@@ -1,0 +1,127 @@
+asyncapi: 2.2.0
+info:
+  title: Dillery Scheduler Service
+  version: 0.1.0
+  description: |
+    Background task scheduling service. Manages the whole task pipeline. 
+    
+    Clients should *post* their task and may listen to desired stages of the task exection.
+    
+    ## Task execution pipeline
+    
+    ### Diagram
+    
+    posted --> accepted --> started --> finished -->> performed
+       |                       |
+       |                        ` -------------------->> failed
+       |
+        ` ----------------------------------------->> cancelled
+    
+    ### Stages
+    
+    #### posted
+    Initial stage. A new task was published by a client.
+    
+    #### canelled
+    Final stage. A task can't be accepted for execution for some reason (task data is invalid, task policy check failed,
+    etc).
+    
+    #### accepted
+    A task was accepted for execution by scheduler 
+    
+    #### started
+    A task execution was started by worker
+    
+    #### failed
+    A task execution was failed by worker
+    
+    #### finished
+    A task execution was finished successfully
+    
+    #### performed
+    Final stage. A task pipeline is finished.
+servers:
+  rabbitmq:
+    $ref: '../servers.yaml#/rabbitmq'
+channels:
+  task.posted:
+    servers:
+      - rabbitmq
+    publish:
+      message:
+        $ref: '../messages.yaml#/postedTask'
+      x-prefetch-count: 100
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: dillery
+        queue:
+          name: posted-tasks
+          autoDelete: true
+  task.accepted:
+    servers:
+      - rabbitmq
+    subscribe:
+      message:
+        $ref: '../messages.yaml#/acceptedTask'
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: dillery
+  task.cancelled:
+    servers:
+      - rabbitmq
+    subscribe:
+      message:
+        $ref: '../messages.yaml#/cancelledTask'
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: dillery
+  task.started:
+    servers:
+      - rabbitmq
+    publish:
+      message:
+        $ref: '../messages.yaml#/startedTask'
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: dillery
+  task.finished:
+    servers:
+      - rabbitmq
+    publish:
+      message:
+        $ref: '../messages.yaml#/finishedTask'
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: dillery
+  task.failed:
+    servers:
+      - rabbitmq
+    publish:
+      message:
+        $ref: '../messages.yaml#/failedTask'
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: dillery
+  task.performed:
+    servers:
+      - rabbitmq
+    subscribe:
+      message:
+        $ref: '../messages.yaml#/performedTask'
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: dillery

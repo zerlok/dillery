@@ -1,0 +1,172 @@
+postedTask:
+  name: PostedTask
+  title: Posted Task
+  payload:
+    title: Posted Task
+    type: object
+    properties:
+      info:
+        title: Info
+        type: object
+        allOf:
+          - $ref: '#/schemas/taskMeta'
+          - type: object
+            properties:
+              postedAt:
+                type: string
+                format: date-time
+                description: A time when task was posted
+      input:
+        $ref: '#/schemas/taskInput'
+acceptedTask:
+  name: AcceptedTask
+  title: Accepted Task
+  payload:
+    title: Accepted Task
+    type: object
+    properties:
+      info:
+        title: Info
+        type: object
+        allOf:
+          - $ref: '#/schemas/taskMeta'
+          - type: object
+            properties:
+              acceptedAt:
+                type: string
+                format: date-time
+                description: A time when task was accepted
+cancelledTask:
+  name: CancelledTask
+  title: Cancelled Task
+  payload:
+    title: Cancelled Task
+    type: object
+    properties:
+      info:
+        title: Info
+        type: object
+        allOf:
+          - $ref: '#/schemas/taskMeta'
+          - type: object
+            properties:
+              cancelledAt:
+                type: string
+                format: date-time
+                description: A time when task was cancelled
+startedTask:
+  name: StartedTask
+  title: Started Task
+  payload:
+    title: Started Task
+    type: object
+    properties:
+      info:
+        title: Info
+        type: object
+        allOf:
+          - $ref: '#/schemas/taskMeta'
+          - type: object
+            properties:
+              startedAt:
+                type: string
+                format: date-time
+                description: A time when task was started
+finishedTask:
+  name: FinishedTask
+  title: Finished Task
+  payload:
+    title: Finished Task
+    type: object
+    properties:
+      info:
+        title: Info
+        type: object
+        allOf:
+          - $ref: '#/schemas/taskMeta'
+          - type: object
+            properties:
+              finishedAt:
+                type: string
+                format: date-time
+                description: A time when task was finished
+      output:
+        $ref: '#/schemas/taskOutput'
+failedTask:
+  name: FailedTask
+  title: Failed Task
+  payload:
+    title: Failed Task
+    type: object
+    properties:
+      info:
+        title: Info
+        type: object
+        allOf:
+          - $ref: '#/schemas/taskMeta'
+          - type: object
+            properties:
+              failedAt:
+                type: string
+                format: date-time
+                description: A time when task was failed
+      error:
+        $ref: '#/schemas/taskError'
+performedTask:
+  name: PerformedTask
+  title: Performed Task
+  payload:
+    title: Performed Task
+    type: object
+    properties:
+      info:
+        title: Info
+        type: object
+        allOf:
+          - $ref: '#/schemas/taskMeta'
+
+schemas:
+  taskMeta:
+    title: Task Meta
+    type: object
+    required:
+      - taskId
+    properties:
+      taskId:
+        type: string
+        format: uuid
+        description: A unique identifier of the task
+      groupId:
+        type: string
+        description: A unique identifier of the group the task belongs to
+      authorId:
+        type: string
+        description: A unique identifier to an author who posted the task
+  taskInput:
+    title: Task Input
+    type: object
+    required:
+      - body
+    properties:
+      body:
+        type: string
+        format: byte
+        description: An input data for task execution
+  taskOutput:
+    title: Task Output
+    type: object
+    required:
+      - body
+    properties:
+      body:
+        type: string
+        format: byte
+        description: The execution result of the task
+  taskError:
+    title: Task Error
+    type: object
+    properties:
+      reasonText:
+        type: string
+        description: The description why task execution was failed
+
